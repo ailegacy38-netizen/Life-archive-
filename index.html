@@ -1,0 +1,2675 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Legacy AI: Your Joyful Legacy, Powered
+by AI. Celebrate life, relive memories, and shape the future with
+AI-curated happiness.">
+
+<meta name="keywords" content="digital scrapbook, AI storytelling,
+family memories, joyful moments, interactive legacy, family challenges,
+memory preservation">
+
+<meta property="og:title" content="Legacy AI - Celebrate Life’s Joyful
+Moments">
+
+<meta property="og:description" content="Create vibrant, interactive
+digital scrapbooks with Legacy AI. Share happy memories and build family
+adventures for generations.">
+
+<meta property="og:image"
+content="https://YOUR_WEBSITE_DOMAIN/images/legacy-ai-og.jpg">
+
+<meta property="og:url" content="https://YOUR_WEBSITE_DOMAIN">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<title>Legacy AI - Celebrate Life’s Joyful Moments</title>
+
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+<script defer
+src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+
+<script defer
+src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
+
+<script defer
+src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
+
+<script defer
+src="https://www.gstatic.com/firebasejs/9.6.0/firebase-storage.js"></script>
+
+<script async
+src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_MEASUREMENT_ID"></script>
+
+<script>
+
+window.dataLayer = window.dataLayer || [];
+
+function gtag(){dataLayer.push(arguments);}
+
+gtag('js', new Date());
+
+gtag('config', 'YOUR_GA_MEASUREMENT_ID');
+
+</script>
+
+<script
+src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD&components=buttons,marks,card-fields"></script>
+
+<script async src="https://pay.google.com/gp/p/js/pay.js"
+onload="onGooglePayLoaded()"></script>
+
+<script async
+src="https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js"></script>
+
+<style>
+
+body {
+
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+background-color: #fff3e6;
+
+color: #333;
+
+}
+
+.hero {
+
+background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+
+color: white;
+
+padding: 120px 0;
+
+text-align: center;
+
+}
+
+@media (max-width: 768px) {
+
+.hero h1 {
+
+font-size: 2rem;
+
+}
+
+.hero p.lead {
+
+font-size: 1rem;
+
+}
+
+.hero .d-grid {
+
+display: block;
+
+}
+
+.hero .d-grid .btn {
+
+width: 100%;
+
+margin-bottom: 10px;
+
+}
+
+}
+
+.card {
+
+border-radius: 15px;
+
+background: #fff;
+
+transition: transform 0.2s;
+
+}
+
+.card:hover {
+
+transform: scale(1.05);
+
+}
+
+.btn-joyful {
+
+background-color: #ff6b6b;
+
+border-color: #ff6b6b;
+
+color: white;
+
+font-weight: bold;
+
+}
+
+.btn-joyful:hover {
+
+background-color: #e63946;
+
+border-color: #e63946;
+
+}
+
+.btn-outline-joyful {
+
+color: #ff6b6b;
+
+border-color: #ff6b6b;
+
+}
+
+.btn-outline-joyful:hover {
+
+background-color: #ff6b6b;
+
+color: white;
+
+}
+
+.chat-message.user {
+
+background-color: #ff6b6b;
+
+color: white;
+
+padding: 8px 12px;
+
+border-radius: 15px;
+
+margin-bottom: 5px;
+
+align-self: flex-end;
+
+max-width: 80%;
+
+word-wrap: break-word;
+
+}
+
+.chat-message.ai {
+
+background-color: #ffd93d;
+
+color: #333;
+
+padding: 8px 12px;
+
+border-radius: 15px;
+
+margin-bottom: 5px;
+
+align-self: flex-start;
+
+max-width: 80%;
+
+word-wrap: break-word;
+
+}
+
+.chat-window {
+
+display: flex;
+
+flex-direction: column;
+
+height: 200px;
+
+border: 1px solid #dee2e6;
+
+overflow-y: scroll;
+
+padding: 10px;
+
+margin-bottom: 10px;
+
+}
+
+.footer {
+
+background: #2c3e50;
+
+color: #ecf0f1;
+
+}
+
+.page-section {
+
+display: none;
+
+}
+
+.page-section.active {
+
+display: block;
+
+}
+
+.client-portal-dashboard {
+
+display: none;
+
+}
+
+.progress-container {
+
+width: 100%;
+
+background-color: #f3f3f3;
+
+border-radius: 5px;
+
+margin-top: 10px;
+
+display: none;
+
+}
+
+.progress-bar {
+
+width: 0%;
+
+height: 20px;
+
+background-color: #4CAF50;
+
+text-align: center;
+
+color: white;
+
+border-radius: 5px;
+
+line-height: 20px;
+
+}
+
+.modal-body {
+
+text-align: center;
+
+}
+
+.modal-footer {
+
+justify-content: center;
+
+}
+
+.spinner-border {
+
+display: none;
+
+width: 3rem;
+
+height: 3rem;
+
+margin-top: 15px;
+
+}
+
+.py-4.px-3 {
+
+padding: 1.5rem !important;
+
+}
+
+.container {
+
+padding-left: 15px;
+
+padding-right: 15px;
+
+}
+
+h2.fs-3 {
+
+font-size: 1.75rem !important;
+
+}
+
+.card.p-3 {
+
+padding: 1rem !important;
+
+}
+
+.card h4.fs-5 {
+
+font-size: 1.25rem !important;
+
+}
+
+.toast-container {
+
+position: fixed;
+
+top: 1rem;
+
+right: 1rem;
+
+z-index: 1050;
+
+}
+
+.toast {
+
+background-color: #333;
+
+color: white;
+
+}
+
+.paypal-buttons-container {
+
+min-height: 50px;
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+flex-direction: column;
+
+gap: 10px;
+
+margin-top: 10px;
+
+}
+
+.gpay-button {
+
+height: 40px;
+
+width: 100%;
+
+border-radius: 4px;
+
+cursor: pointer;
+
+background-color: black;
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+margin-top: 10px;
+
+}
+
+.gpay-button svg {
+
+height: 100%;
+
+}
+
+.apple-pay-button {
+
+height: 40px;
+
+width: 100%;
+
+border-radius: 4px;
+
+cursor: pointer;
+
+background-color: black;
+
+display: none;
+
+-webkit-appearance: -apple-pay-button;
+
+-apple-pay-button-type: plain;
+
+-apple-pay-button-style: black;
+
+margin-top: 10px;
+
+}
+
+/* New styles for card fields */
+
+.card-fields-container {
+
+margin-top: 10px;
+
+}
+
+.card-field {
+
+border: 1px solid #dee2e6;
+
+border-radius: 4px;
+
+padding: 10px;
+
+margin-bottom: 10px;
+
+background-color: #fff;
+
+}
+
+.card-field label {
+
+display: block;
+
+margin-bottom: 5px;
+
+font-weight: bold;
+
+}
+
+.card-field-input {
+
+width: 100%;
+
+height: 40px;
+
+border: none;
+
+outline: none;
+
+}
+
+.card-submit-button {
+
+background-color: #ff6b6b;
+
+color: white;
+
+border: none;
+
+padding: 10px;
+
+width: 100%;
+
+border-radius: 4px;
+
+cursor: pointer;
+
+font-weight: bold;
+
+}
+
+.card-submit-button:hover {
+
+background-color: #e63946;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="toast-container"></div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+
+<div class="container">
+
+<a class="navbar-brand" href="#" data-page="home">
+
+<img
+src="https://firebasestorage.googleapis.com/v0/b/YOUR_FIREBASE_STORAGE_BUCKET/o/images%2Flogo.png?alt=media"
+alt="Legacy AI" class="img-fluid" style="max-height: 40px;"
+loading="lazy">
+
+</a>
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+data-bs-target="#navbarNav">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+
+<ul class="navbar-nav ms-auto">
+
+<li class="nav-item"><a class="nav-link" href="#"
+data-page="home">Home</a></li>
+
+<li class="nav-item"><a class="nav-link" href="#"
+data-page="moments">Moments That Matter</a></li>
+
+<li class="nav-item"><a class="nav-link" href="#"
+data-page="challenges">Family Challenges</a></li>
+
+<li class="nav-item"><a class="nav-link" href="#"
+data-page="pricing">Pricing</a></li>
+
+<li class="nav-item"><a class="nav-link" href="#"
+data-page="client-portal">Joyful Portal</a></li>
+
+<li class="nav-item dropdown">
+
+<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+role="button" data-bs-toggle="dropdown">
+
+Language
+
+</a>
+
+<ul class="dropdown-menu">
+
+<li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+
+<li><a class="dropdown-item" href="#" data-lang="es">Spanish</a></li>
+
+<li><a class="dropdown-item" href="#" data-lang="fr">French</a></li>
+
+<li><a class="dropdown-item" href="#" data-lang="de">German</a></li>
+
+<li><a class="dropdown-item" href="#" data-lang="pt">Portuguese</a></li>
+
+</ul>
+
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+<section id="home" class="page-section active">
+
+<div class="hero text-white py-5 px-3 mt-5">
+
+<div class="container">
+
+<h1 data-key="home_title" class="fs-2">Capture Life’s Joyful Moments
+with Legacy AI</h1>
+
+<p class="lead fs-6" data-key="home_lead">Relive the past, celebrate the
+present, and shape the future with AI-curated happiness. Create
+Together, Reminisce Forever: Build vibrant digital scrapbooks and happy
+timelines for generations.</p>
+
+<div class="d-grid gap-3 d-md-block">
+
+<a href="https://forms.gle/YOUR_CONSULTATION_FORM_ID" class="btn
+btn-joyful btn-lg w-100 w-md-auto mt-3" target="_blank"
+data-key="get_started_free">Get Started Free</a>
+
+<a
+href="https://firebasestorage.googleapis.com/v0/b/YOUR_FIREBASE_STORAGE_BUCKET/o/downloads%2Fjoyful-guide.pdf?alt=media"
+class="btn btn-outline-light btn-lg w-100 w-md-auto mt-3" download
+data-key="download_joyful_guide">Download Joyful Memory Guide</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="py-5 bg-light px-3">
+
+<div class="container">
+
+<h2 class="text-center mb-4 fs-3" data-key="how_it_works_title">How
+Legacy AI Spreads Joy</h2>
+
+<div class="row">
+
+<div class="col-md-4 text-center mb-4">
+
+<h4 data-key="capture_moments_step" class="fs-5">1. Capture Happy
+Moments</h4>
+
+<p data-key="capture_moments_desc">Upload photos, videos, and voice
+notes of birthdays, trips, and everyday joys.</p>
+
+</div>
+
+<div class="col-md-4 text-center mb-4">
+
+<h4 data-key="create_adventures_step" class="fs-5">2. Create Family
+Adventures</h4>
+
+<p data-key="create_adventures_desc">AI crafts interactive stories and
+games starring your loved ones.</p>
+
+</div>
+
+<div class="col-md-4 text-center mb-4">
+
+<h4 data-key="build_timeline_step" class="fs-5">3. Build a Happy
+Timeline</h4>
+
+<p data-key="build_timeline_desc">Organize milestones into a vibrant
+digital scrapbook for all to cherish.</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="moments" class="page-section">
+
+<div class="container py-5 px-3">
+
+<h2 class="text-center mb-4 fs-3" data-key="moments_title">Moments That
+Matter</h2>
+
+<p class="lead text-center" data-key="moments_intro">Relive the joy of
+birthdays, family trips, inside jokes, and everyday moments. Upload your
+happiest memories to create a digital scrapbook that sparks smiles.</p>
+
+<div class="row">
+
+<div class="col-12 col-sm-6 col-md-4 mb-4">
+
+<div class="card p-3 text-center">
+
+<h4 data-key="upload_photos_title" class="fs-5">Photos of Joy</h4>
+
+<p data-key="upload_photos_desc">Share snapshots of laughter and
+love.</p>
+
+<input type="file" class="form-control mb-2" accept="image/*"
+id="uploadPhotoInput" multiple>
+
+<textarea class="form-control mb-2" id="photoEmotionInput"
+data-placeholder-key="emotion_tag_placeholder" placeholder="Tag emotions
+or themes (e.g., #joyful, #adventure)"></textarea>
+
+<button class="btn btn-joyful btn-lg w-100" data-key="upload_now"
+id="uploadPhotoButton">Upload Now</button>
+
+<div class="progress-container" id="photoProgressContainer"><div
+class="progress-bar" id="photoProgressBar">0%</div></div>
+
+</div>
+
+</div>
+
+<div class="col-12 col-sm-6 col-md-4 mb-4">
+
+<div class="card p-3 text-center">
+
+<h4 data-key="record_voice_title" class="fs-5">Voice Notes</h4>
+
+<p data-key="record_voice_desc">Capture jokes, songs, or heartfelt
+messages.</p>
+
+<textarea class="form-control mb-2" id="voiceEmotionInput"
+data-placeholder-key="emotion_tag_placeholder" placeholder="Tag emotions
+or themes (e.g., #laughter, #wisdom)"></textarea>
+
+<button class="btn btn-joyful btn-lg w-100" data-key="record_now"
+id="recordVoiceButton">Record Now</button>
+
+<button class="btn btn-outline-joyful btn-lg w-100 mt-2"
+data-key="stop_recording" id="stopRecordingButton" style="display:
+none;">Stop Recording</button>
+
+<div class="mt-2" id="recordingTimer" style="display: none;">00:00</div>
+
+<audio controls id="audioPreview" class="w-100 mt-2" style="display:
+none;"></audio>
+
+<div class="progress-container" id="voiceProgressContainer"><div
+class="progress-bar" id="voiceProgressBar">0%</div></div>
+
+</div>
+
+</div>
+
+<div class="col-12 col-sm-6 col-md-4 mb-4">
+
+<div class="card p-3 text-center">
+
+<h4 data-key="share_videos_title" class="fs-5">Happy Videos</h4>
+
+<p data-key="share_videos_desc">Upload clips of celebrations and
+adventures.</p>
+
+<input type="file" class="form-control mb-2" accept="video/*"
+id="uploadVideoInput" multiple>
+
+<textarea class="form-control mb-2" id="videoEmotionInput"
+data-placeholder-key="emotion_tag_placeholder" placeholder="Tag emotions
+or themes (e.g., #celebration, #travel)"></textarea>
+
+<button class="btn btn-joyful btn-lg w-100" data-key="upload_now"
+id="uploadVideoButton">Upload Now</button>
+
+<div class="progress-container" id="videoProgressContainer"><div
+class="progress-bar" id="videoProgressBar">0%</div></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="challenges" class="page-section">
+
+<div class="container py-5 px-3">
+
+<h2 class="text-center mb-4 fs-3"
+data-key="challenges_title">Interactive Family Challenges</h2>
+
+<p class="lead text-center" data-key="challenges_intro">Bring your
+family closer with fun prompts that create joyful memories. Complete
+challenges and build a positive archive together!</p>
+
+<div class="row">
+
+<div class="col-12 col-md-4 mb-4">
+
+<div class="card p-4 text-center">
+
+<h4 data-key="funny_question_title" class="fs-5">Funny Question
+Challenge</h4>
+
+<p data-key="funny_question_desc">Ask your grandparents one hilarious
+question today and record their answer!</p>
+
+<textarea class="form-control mb-2" id="funnyQuestionResponse"
+placeholder="Your family's answer..."></textarea>
+
+<button class="btn btn-joyful btn-lg w-100" data-key="start_challenge"
+data-challenge-id="funny-question">Submit Response</button>
+
+</div>
+
+</div>
+
+<div class="col-12 col-md-4 mb-4">
+
+<div class="card p-4 text-center">
+
+<h4 data-key="dance_off_title" class="fs-5">Family Dance-Off</h4>
+
+<p data-key="dance_off_desc">Record a 60-second family dance-off and
+share the fun!</p>
+
+<input type="file" class="form-control mb-2" accept="video/*"
+id="danceOffVideoInput">
+
+<button class="btn btn-joyful btn-lg w-100" data-key="start_challenge"
+data-challenge-id="dance-off">Upload Video</button>
+
+</div>
+
+</div>
+
+<div class="col-12 col-md-4 mb-4">
+
+<div class="card p-4 text-center">
+
+<h4 data-key="childhood_memory_title" class="fs-5">Childhood Memory
+Story</h4>
+
+<p data-key="childhood_memory_desc">Share a 60-second story of your
+happiest childhood moment.</p>
+
+<textarea class="form-control mb-2" id="childhoodMemoryResponse"
+placeholder="Your story..."></textarea>
+
+<button class="btn btn-joyful btn-lg w-100" data-key="start_challenge"
+data-challenge-id="childhood-memory">Submit Story</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="pricing" class="page-section">
+
+<div class="container py-5 px-3">
+
+<h2 class="text-center mb-4 fs-3" data-key="pricing_title">Choose Your
+Joyful Plan</h2>
+
+<p class="text-center mb-5" data-key="pricing_intro">Start free or
+unlock premium features to create unforgettable family memories.</p>
+
+<div id="plan-status" class="alert alert-info text-center"
+style="display: none;"></div>
+
+<div class="row row-cols-1 row-cols-md-4 g-4">
+
+<div class="col">
+
+<div class="card h-100 text-center">
+
+<div class="card-body">
+
+<h3 data-key="free_tier_title">Basic Legacy</h3>
+
+<p data-key="free_tier_desc">Limited text & photo archive, AI memory
+highlights, 5 AI interactions/month.</p>
+
+<p class="display-4 fw-bold">$0</p>
+
+<button class="btn btn-joyful plan-button" data-key="get_started_free"
+data-plan="basic">Get Started Free</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col">
+
+<div class="card h-100 text-center">
+
+<div class="card-body">
+
+<h3 data-key="essential_tier_title">Essential Legacy</h3>
+
+<p data-key="essential_tier_desc">Expanded storage, custom AI persona,
+multi-language support, mood-based search.</p>
+
+<p class="display-4 fw-bold">$15/mo</p>
+
+<div id="googlepay-button-container-essential"></div>
+
+<button id="applepay-button-essential" class="apple-pay-button"
+style="display: none;"></button>
+
+<div class="paypal-buttons-container" id="paypal-essential"></div>
+
+<div class="card-fields-container" id="card-fields-essential">
+
+<div class="card-field">
+
+<label for="card-number-essential">Card Number</label>
+
+<div id="card-number-essential" class="card-field-input"></div>
+
+</div>
+
+<div class="card-field">
+
+<label for="card-expiry-essential">Expiration Date</label>
+
+<div id="card-expiry-essential" class="card-field-input"></div>
+
+</div>
+
+<div class="card-field">
+
+<label for="card-cvv-essential">CVV</label>
+
+<div id="card-cvv-essential" class="card-field-input"></div>
+
+</div>
+
+<button class="card-submit-button" id="card-submit-essential">Pay with
+Card</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col">
+
+<div class="card h-100 text-center">
+
+<div class="card-body">
+
+<h3 data-key="family_tier_title">Family Legacy Plus</h3>
+
+<p data-key="family_tier_desc">Shared archives, collaborative
+scrapbooks, unlimited AI interactions, family games.</p>
+
+<p class="display-4 fw-bold">$39/mo</p>
+
+<div id="googlepay-button-container-family"></div>
+
+<button id="applepay-button-family" class="apple-pay-button"
+style="display: none;"></button>
+
+<div class="paypal-buttons-container" id="paypal-family"></div>
+
+<div class="card-fields-container" id="card-fields-family">
+
+<div class="card-field">
+
+<label for="card-number-family">Card Number</label>
+
+<div id="card-number-family" class="card-field-input"></div>
+
+</div>
+
+<div class="card-field">
+
+<label for="card-expiry-family">Expiration Date</label>
+
+<div id="card-expiry-family" class="card-field-input"></div>
+
+</div>
+
+<div class="card-field">
+
+<label for="card-cvv-family">CVV</label>
+
+<div id="card-cvv-family" class="card-field-input"></div>
+
+</div>
+
+<button class="card-submit-button" id="card-submit-family">Pay with
+Card</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col">
+
+<div class="card h-100 text-center">
+
+<div class="card-body">
+
+<h3 data-key="lifetime_tier_title">Lifetime Legacy Vault</h3>
+
+<p data-key="lifetime_tier_desc">Unlimited storage, AI legacy book,
+priority support, scheduled messages, and **exclusive VIP family support
+with personalized AI memory curations.**</p>
+
+<p class="display-4 fw-bold">$299</p>
+
+<button class="btn btn-outline-joyful plan-button" data-key="buy_now"
+data-plan="lifetime">Buy Now</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="text-center mt-5">
+
+<h3 data-key="one_time_title">Premium Enhancements</h3>
+
+<p data-key="one_time_desc">Add unique features to your joyful
+legacy.</p>
+
+<div class="row">
+
+<div class="col-md-4 mb-4">
+
+<p data-key="storybook_purchase">AI Storybook ($99)</p>
+
+<button class="btn btn-outline-joyful" data-key="buy_now">Buy
+Now</button>
+
+</div>
+
+<div class="col-md-4 mb-4">
+
+<p data-key="time_capsule_purchase">Time Capsule ($49)</p>
+
+<button class="btn btn-outline-joyful" data-key="buy_now">Buy
+Now</button>
+
+</div>
+
+<div class="col-md-4 mb-4">
+
+<p data-key="video_message_purchase">Legacy Video ($79)</p>
+
+<button class="btn btn-outline-joyful" data-key="buy_now">Buy
+Now</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="text-center mt-5">
+
+<h3 data-key="business_creator_title">For Businesses & Creators</h3>
+
+<p data-key="business_creator_desc">Preserve brand stories or create
+unique AI personas.</p>
+
+<p data-key="business_plan">Business Plan: $499/year</p>
+
+<p data-key="creator_plan">Creator Plan: $99 setup + $25/mo</p>
+
+<p data-key="community_plan">Community Vault: $149/year</p>
+
+<button class="btn btn-joyful" data-key="contact_sales">Contact
+Sales</button>
+
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1"
+aria-labelledby="successModalLabel" aria-hidden="true">
+
+<div class="modal-dialog">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h5 class="modal-title" id="successModalLabel">Success!</h5>
+
+<button type="button" class="btn-close" data-bs-dismiss="modal"
+aria-label="Close"></button>
+
+</div>
+
+<div class="modal-body">
+
+Your subscription was successful! Welcome to Legacy AI!
+
+</div>
+
+<div class="modal-footer">
+
+<button type="button" class="btn btn-secondary"
+data-bs-dismiss="modal">Close</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="modal fade" id="errorModal" tabindex="-1"
+aria-labelledby="errorModalLabel" aria-hidden="true">
+
+<div class="modal-dialog">
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+<h5 class="modal-title" id="errorModalLabel">Error</h5>
+
+<button type="button" class="btn-close" data-bs-dismiss="modal"
+aria-label="Close"></button>
+
+</div>
+
+<div class="modal-body">
+
+<span id="errorMessage"></span>
+
+</div>
+
+<div class="modal-footer">
+
+<button type="button" class="btn btn-secondary"
+data-bs-dismiss="modal">Close</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="infoMessageContainer" class="mt-3"></div>
+
+</div>
+
+</section>
+
+<section id="client-portal" class="page-section">
+
+<div class="container py-5 px-3">
+
+<div class="client-portal-section" id="login-form">
+
+<h2 class="text-center mb-4 fs-3" data-key="login_title">Joyful Portal
+Login</h2>
+
+<form id="loginForm">
+
+<div class="mb-3">
+
+<label for="clientEmail" class="form-label"
+data-key="email_label">Email</label>
+
+<input type="email" class="form-control" id="clientEmail"
+data-placeholder-key="email_input_placeholder" placeholder="Email"
+required>
+
+</div>
+
+<div class="mb-3">
+
+<label for="clientPassword" class="form-label"
+data-key="password_label">Password</label>
+
+<input type="password" class="form-control" id="clientPassword"
+data-placeholder-key="password_input_placeholder" placeholder="Password"
+required>
+
+</div>
+
+<button type="submit" class="btn btn-joyful w-100"
+data-key="login_button">Login</button>
+
+<div class="text-center mt-3">
+
+<a href="#" data-key="forgot_password">Forgot Password?</a>
+
+</div>
+
+<div id="loginError" class="alert alert-danger mt-3 d-none"></div>
+
+</form>
+
+</div>
+
+<div class="client-portal-dashboard" id="dashboard-content">
+
+<h2 class="mb-4" data-key="welcome_user">Welcome, <span
+id="userName"></span>!</h2>
+
+<div class="row">
+
+<div class="col-md-6 mb-4">
+
+<div class="card p-4">
+
+<h4 data-key="happy_timeline_title" class="fs-5">Your Happy
+Timeline</h4>
+
+<p data-key="happy_timeline_desc">Add milestones, firsts, and joyful
+moments to your digital scrapbook.</p>
+
+<button class="btn btn-joyful" data-key="add_milestone"
+id="addMilestoneButton">Add Milestone</button>
+
+</div>
+
+</div>
+
+<div class="col-md-6 mb-4">
+
+<div class="card p-4">
+
+<h4 data-key="bucket_list_title" class="fs-5">Family Bucket List</h4>
+
+<p data-key="bucket_list_desc">Set shared goals like trips or fun
+activities and track progress!</p>
+
+<input type="text" class="form-control mb-2" id="goalInput"
+data-placeholder-key="add_goal_placeholder" placeholder="Add a goal...">
+
+<button class="btn btn-joyful" data-key="add_goal"
+id="addGoalButton">Add Goal</button>
+
+</div>
+
+</div>
+
+<div class="col-md-6 mb-4">
+
+<div class="card p-4">
+
+<h4 data-key="storytelling_mode_title" class="fs-5">AI Storytelling
+Adventure</h4>
+
+<p data-key="storytelling_mode_desc">Your co-pilot in crafting your
+family’s unique journey, creating fun, fictional stories with your loved
+ones as heroes!</p>
+
+<div class="mb-3">
+
+<label for="storyCharacters" class="form-label"
+data-key="story_characters_label">Who are the main characters?</label>
+
+<input type="text" class="form-control" id="storyCharacters"
+data-placeholder-key="story_characters_placeholder" placeholder="e.g.,
+Mom, Dad, Lily, our dog Sparky">
+
+</div>
+
+<div class="mb-3">
+
+<label for="storyTheme" class="form-label"
+data-key="story_theme_label">Choose a theme:</label>
+
+<select class="form-select" id="storyTheme">
+
+<option value="" data-key="select_theme_option">Select a theme</option>
+
+<option value="adventure">Adventure</option>
+
+<option value="mystery">Mystery</option>
+
+<option value="comedy">Comedy</option>
+
+</select>
+
+</div>
+
+<button class="btn btn-joyful" data-key="generate_story"
+id="generateStoryButton">Generate Story</button>
+
+<div id="storyOutput" class="mt-3 p-3 border rounded" style="display:
+none;"></div>
+
+<div class="d-flex justify-content-center mt-3" id="storyActions"
+style="display: none;">
+
+<button class="btn btn-outline-joyful me-2" id="saveStoryButton">Save
+Story</button>
+
+<button class="btn btn-outline-joyful me-2" id="shareStoryButton">Share
+Story</button>
+
+<button class="btn btn-outline-joyful"
+id="regenerateStoryButton">Regenerate Story</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6 mb-4">
+
+<div class="card p-4">
+
+<h4 data-key="challenge_response_title" class="fs-5">Respond to
+Challenges</h4>
+
+<p data-key="challenge_response_desc">View and respond to family
+challenges.</p>
+
+<button class="btn btn-joyful" data-key="view_challenges">View
+Challenges</button>
+
+</div>
+
+</div>
+
+<div class="col-md-6 mb-4">
+
+<div class="card p-4">
+
+<h4 data-key="account_settings_title" class="fs-5">Account Settings</h4>
+
+<p data-key="account_settings_desc">Manage your profile, subscription,
+and preferences.</p>
+
+<button class="btn btn-joyful" data-key="manage_settings">Manage
+Settings</button>
+
+</div>
+
+</div>
+
+<div class="col-md-6 mb-4">
+
+<div class="card p-4">
+
+<h4 data-key="contact_support_title" class="fs-5">Support</h4>
+
+<p data-key="contact_support_desc">Get help or provide feedback.</p>
+
+<button class="btn btn-joyful" data-key="contact_us">Contact Us</button>
+
+</div>
+
+</div>
+
+</div>
+
+<p class="text-center mt-3">
+
+<a href="#" class="btn btn-outline-secondary" id="logoutButton"
+data-key="logout_button">Logout</a>
+
+</p>
+
+</div>
+
+<div id="demo-content" class="text-center mt-5">
+
+<h2 data-key="demo_timeline_title">Preview a Happy Timeline</h2>
+
+<p data-key="demo_timeline_desc">See how Legacy AI brings memories to
+life!</p>
+
+<div class="row mt-4">
+
+<div class="col-md-4 mb-4">
+
+<img
+src="https://firebasestorage.googleapis.com/v0/b/YOUR_FIREBASE_STORAGE_BUCKET/o/images%2Fdemo-timeline-1.jpg?alt=media"
+alt="Memory 1" class="img-fluid rounded shadow" loading="lazy">
+
+<p class="mt-2 text-muted">#BirthdayJoy</p>
+
+</div>
+
+<div class="col-md-4 mb-4">
+
+<img
+src="https://firebasestorage.googleapis.com/v0/b/YOUR_FIREBASE_STORAGE_BUCKET/o/images%2Fdemo-timeline-2.jpg?alt=media"
+alt="Memory 2" class="img-fluid rounded shadow" loading="lazy">
+
+<p class="mt-2 text-muted">#FamilyAdventure</p>
+
+</div>
+
+<div class="col-md-4 mb-4">
+
+<audio controls class="w-100" id="demoAudioPlayer">
+
+<source
+src="https://firebasestorage.googleapis.com/v0/b/YOUR_FIREBASE_STORAGE_BUCKET/o/audio%2Fdemo-voice-note.mp3?alt=media"
+type="audio/mpeg">
+
+Your browser does not support the audio element.
+
+</audio>
+
+<p class="mt-2 text-muted">#Laughter #Wisdom</p>
+
+</div>
+
+</div>
+
+<p class="text-center mt-3">
+
+<a href="#" data-page="client-portal" class="btn btn-joyful"
+data-key="login_to_create">Login to Create Your Own</a>
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<footer class="footer py-4 mt-5">
+
+<div class="container text-center">
+
+<p>© <span id="current-year"></span> Legacy AI. All rights reserved.</p>
+
+</div>
+
+</footer>
+
+<script
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+// Firebase Configuration
+
+const firebaseConfig = {
+
+apiKey: "YOUR_FIREBASE_API_KEY",
+
+authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+
+projectId: "YOUR_FIREBASE_PROJECT_ID",
+
+storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+
+messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+
+appId: "YOUR_FIREBASE_APP_ID"
+
+};
+
+// Initialize Firebase
+
+firebase.initializeApp(firebaseConfig);
+
+const authService = firebase.auth();
+
+const firestore = firebase.firestore();
+
+const storageService = firebase.storage();
+
+let mediaRecorder = null;
+
+let audioChunks = [];
+
+let audioBlob = null;
+
+let recordingTimerInterval = null;
+
+let recordingStartTime = 0;
+
+let currentLang = 'en'; // Default language
+
+// Function to display toast notifications
+
+function showToast(message, type = 'info') {
+
+const toastContainer = document.querySelector('.toast-container');
+
+const toast = document.createElement('div');
+
+toast.classList.add('toast', 'align-items-center', 'text-white',
+'border-0');
+
+if (type === 'success') {
+
+toast.classList.add('bg-success');
+
+} else if (type === 'error') {
+
+toast.classList.add('bg-danger');
+
+} else {
+
+toast.classList.add('bg-info');
+
+}
+
+toast.setAttribute('role', 'alert');
+
+toast.setAttribute('aria-live', 'assertive');
+
+toast.setAttribute('aria-atomic', 'true');
+
+toast.innerHTML = `
+
+<div class="d-flex">
+
+<div class="toast-body">${message}</div>
+
+<button type="button" class="btn-close btn-close-white me-2 m-auto"
+data-bs-dismiss="toast" aria-label="Close"></button>
+
+</div>
+
+`;
+
+toastContainer.appendChild(toast);
+
+const bootstrapToast = new bootstrap.Toast(toast, { delay: 3000 });
+
+bootstrapToast.show();
+
+toast.addEventListener('hidden.bs.toast', () => {
+
+toast.remove();
+
+});
+
+}
+
+const translations = {
+
+en: {
+
+home_title: "Capture Life’s Joyful Moments with Legacy AI",
+
+home_lead: "Relive the past, celebrate the present, and shape the future
+with AI-curated happiness. Create Together, Reminisce Forever: Build
+vibrant digital scrapbooks and happy timelines for generations.",
+
+get_started_free: "Get Started Free",
+
+download_joyful_guide: "Download Joyful Memory Guide",
+
+how_it_works_title: "How Legacy AI Spreads Joy",
+
+capture_moments_step: "1. Capture Happy Moments",
+
+capture_moments_desc: "Upload photos, videos, and voice notes of
+birthdays, trips, and everyday joys.",
+
+create_adventures_step: "2. Create Family Adventures",
+
+create_adventures_desc: "AI crafts interactive stories and games
+starring your loved ones.",
+
+build_timeline_step: "3. Build a Happy Timeline",
+
+build_timeline_desc: "Organize milestones into a vibrant digital
+scrapbook for all to cherish.",
+
+moments_title: "Moments That Matter",
+
+moments_intro: "Relive the joy of birthdays, family trips, inside jokes,
+and everyday moments. Upload your happiest memories to create a digital
+scrapbook that sparks smiles.",
+
+upload_photos_title: "Photos of Joy",
+
+upload_photos_desc: "Share snapshots of laughter and love.",
+
+record_voice_title: "Voice Notes",
+
+record_voice_desc: "Capture jokes, songs, or heartfelt messages.",
+
+share_videos_title: "Happy Videos",
+
+share_videos_desc: "Upload clips of celebrations and adventures.",
+
+emotion_tag_placeholder: "Tag emotions or themes (e.g., #joyful,
+#adventure)",
+
+upload_now: "Upload Now",
+
+record_now: "Record Now",
+
+stop_recording: "Stop Recording",
+
+upload_failed: "Upload failed:",
+
+upload_success: "Voice note uploaded successfully! MP3 conversion in
+progress.",
+
+mp3_conversion_failed: "Voice note uploaded, but MP3 conversion failed.
+Playing WebM.",
+
+microphone_error: "Microphone access denied or unavailable: ",
+
+challenges_title: "Interactive Family Challenges",
+
+challenges_intro: "Bring your family closer with fun prompts that create
+joyful memories. Complete challenges and build a positive archive
+together!",
+
+funny_question_title: "Funny Question Challenge",
+
+funny_question_desc: "Ask your grandparents one hilarious question today
+and record their answer!",
+
+dance_off_title: "Family Dance-Off",
+
+dance_off_desc: "Record a 60-second family dance-off and share the
+fun!",
+
+childhood_memory_title: "Childhood Memory Story",
+
+childhood_memory_desc: "Share a 60-second story of your happiest
+childhood moment.",
+
+start_challenge: "Submit Response",
+
+pricing_title: "Choose Your Joyful Plan",
+
+pricing_intro: "Start free or unlock premium features to create
+unforgettable family memories.",
+
+free_tier_title: "Basic Legacy",
+
+free_tier_desc: "Limited text & photo archive, AI memory highlights, 5
+AI interactions/month.",
+
+essential_tier_title: "Essential Legacy",
+
+essential_tier_desc: "Expanded storage, custom AI persona,
+multi-language support, mood-based search.",
+
+family_tier_title: "Family Legacy Plus",
+
+family_tier_desc: "Shared archives, collaborative scrapbooks, unlimited
+AI interactions, family games.",
+
+lifetime_tier_title: "Lifetime Legacy Vault",
+
+lifetime_tier_desc: "Unlimited storage, AI legacy book, priority
+support, scheduled messages, and **exclusive VIP family support with
+personalized AI memory curations.**",
+
+buy_now: "Buy Now",
+
+one_time_title: "Premium Enhancements",
+
+one_time_desc: "Add unique features to your joyful legacy.",
+
+storybook_purchase: "AI Storybook ($99)",
+
+time_capsule_purchase: "Time Capsule ($49)",
+
+video_message_purchase: "Legacy Video ($79)",
+
+business_creator_title: "For Businesses & Creators",
+
+business_creator_desc: "Preserve brand stories or create unique AI
+personas.",
+
+business_plan: "Business Plan: $499/year",
+
+creator_plan: "Creator Plan: $99 setup + $25/mo",
+
+community_plan: "Community Vault: $149/year",
+
+contact_sales: "Contact Sales",
+
+login_title: "Joyful Portal Login",
+
+email_label: "Email",
+
+email_input_placeholder: "Email",
+
+password_label: "Password",
+
+password_input_placeholder: "Password",
+
+login_button: "Login",
+
+forgot_password: "Forgot Password?",
+
+email_required: "Please enter your email address.",
+
+password_reset_sent: "Password reset email sent! Check your inbox.",
+
+login_required: "Please log in to record a...",
+
+current_plan: "You're on {{planName}} 💛"
+
+},
+
+};
+
+function applyTranslations() {
+
+document.querySelectorAll('[data-key]').forEach(element => {
+
+const key = element.getAttribute('data-key');
+
+if (translations[currentLang] && translations[currentLang][key]) {
+
+element.textContent = translations[currentLang][key];
+
+}
+
+});
+
+document.querySelectorAll('[data-placeholder-key]').forEach(element => {
+
+const key = element.getAttribute('data-placeholder-key');
+
+if (translations[currentLang] && translations[currentLang][key]) {
+
+element.placeholder = translations[currentLang][key];
+
+}
+
+});
+
+}
+
+document.querySelectorAll('.dropdown-item[data-lang]').forEach(item => {
+
+item.addEventListener('click', function(e) {
+
+e.preventDefault();
+
+currentLang = this.getAttribute('data-lang');
+
+applyTranslations();
+
+});
+
+});
+
+applyTranslations();
+
+document.querySelectorAll('a[data-page]').forEach(link => {
+
+link.addEventListener('click', function(e) {
+
+e.preventDefault();
+
+document.querySelectorAll('.page-section').forEach(section => {
+
+section.classList.remove('active');
+
+});
+
+const targetPage = this.getAttribute('data-page');
+
+document.getElementById(targetPage).classList.add('active');
+
+if (targetPage === 'client-portal') {
+
+authService.onAuthStateChanged(user => {
+
+if (user) {
+
+document.getElementById('login-form').style.display = 'none';
+
+document.getElementById('dashboard-content').style.display = 'block';
+
+document.getElementById('userName').textContent = user.email;
+
+updatePlanStatus(user.uid);
+
+} else {
+
+document.getElementById('login-form').style.display = 'block';
+
+document.getElementById('dashboard-content').style.display = 'none';
+
+}
+
+});
+
+}
+
+});
+
+});
+
+document.getElementById('loginForm').addEventListener('submit', async
+function(e) {
+
+e.preventDefault();
+
+const email = document.getElementById('clientEmail').value;
+
+const password = document.getElementById('clientPassword').value;
+
+try {
+
+await authService.signInWithEmailAndPassword(email, password);
+
+showToast('Logged in successfully!', 'success');
+
+document.getElementById('login-form').style.display = 'none';
+
+document.getElementById('dashboard-content').style.display = 'block';
+
+document.getElementById('userName').textContent =
+authService.currentUser.email;
+
+updatePlanStatus(authService.currentUser.uid);
+
+} catch (error) {
+
+showToast(`Login failed: ${error.message}`, 'error');
+
+console.error('Login error:', error);
+
+}
+
+});
+
+document.getElementById('logoutButton').addEventListener('click', async
+function(e) {
+
+e.preventDefault();
+
+try {
+
+await authService.signOut();
+
+showToast('Logged out successfully!', 'info');
+
+document.getElementById('login-form').style.display = 'block';
+
+document.getElementById('dashboard-content').style.display = 'none';
+
+} catch (error) {
+
+showToast(`Logout failed: ${error.message}`, 'error');
+
+console.error('Logout error:', error);
+
+}
+
+});
+
+document.querySelector('[data-key="forgot_password"]').addEventListener('click',
+async function(e) {
+
+e.preventDefault();
+
+const email = document.getElementById('clientEmail').value;
+
+if (email) {
+
+try {
+
+await authService.sendPasswordResetEmail(email);
+
+showToast(translations[currentLang].password_reset_sent, 'info');
+
+} catch (error) {
+
+showToast(`Password reset failed: ${error.message}`, 'error');
+
+console.error('Password reset error:', error);
+
+}
+
+} else {
+
+showToast(translations[currentLang].email_required, 'error');
+
+}
+
+});
+
+async function updatePlanStatus(userId) {
+
+const planStatusElement = document.getElementById('plan-status');
+
+try {
+
+const userDoc = await firestore.collection('users').doc(userId).get();
+
+if (userDoc.exists && userDoc.data().plan) {
+
+const planName = userDoc.data().plan;
+
+planStatusElement.textContent =
+translations[currentLang].current_plan.replace('{{planName}}',
+planName);
+
+planStatusElement.style.display = 'block';
+
+} else {
+
+planStatusElement.style.display = 'none';
+
+}
+
+} catch (error) {
+
+console.error("Error fetching plan status:", error);
+
+planStatusElement.style.display = 'none';
+
+}
+
+}
+
+async function uploadFile(file, type, emotionTagsInputId, progressBarId,
+progressContainerId) {
+
+if (!authService.currentUser) {
+
+showToast(translations[currentLang].login_required, 'error');
+
+return;
+
+}
+
+const storageRef = storageService.ref();
+
+const fileRef =
+storageRef.child(`${type}s/${authService.currentUser.uid}/${file.name}`);
+
+const uploadTask = fileRef.put(file);
+
+const progressBar = document.getElementById(progressBarId);
+
+const progressContainer = document.getElementById(progressContainerId);
+
+progressContainer.style.display = 'block';
+
+uploadTask.on('state_changed',
+
+(snapshot) => {
+
+const progress = (snapshot.bytesTransferred / snapshot.totalBytes) *
+100;
+
+progressBar.style.width = progress + '%';
+
+progressBar.textContent = Math.round(progress) + '%';
+
+},
+
+(error) => {
+
+showToast(`${translations[currentLang].upload_failed} ${error.message}`,
+'error');
+
+console.error("Upload failed:", error);
+
+progressContainer.style.display = 'none';
+
+},
+
+() => {
+
+uploadTask.snapshot.ref.getDownloadURL().then(async (downloadURL) => {
+
+showToast(`${type} uploaded successfully!`, 'success');
+
+progressContainer.style.display = 'none';
+
+const emotionTags = document.getElementById(emotionTagsInputId).value;
+
+await
+firestore.collection('users').doc(authService.currentUser.uid).collection(type).add({
+
+fileName: file.name,
+
+fileType: file.type,
+
+downloadURL: downloadURL,
+
+emotionTags: emotionTags,
+
+timestamp: firebase.firestore.FieldValue.serverTimestamp()
+
+});
+
+document.getElementById(emotionTagsInputId).value = '';
+
+});
+
+}
+
+);
+
+}
+
+document.getElementById('uploadPhotoButton').addEventListener('click',
+function() {
+
+const fileInput = document.getElementById('uploadPhotoInput');
+
+if (fileInput.files.length > 0) {
+
+Array.from(fileInput.files).forEach(file => {
+
+uploadFile(file, 'photo', 'photoEmotionInput', 'photoProgressBar',
+'photoProgressContainer');
+
+});
+
+fileInput.value = '';
+
+} else {
+
+showToast('Please select a photo to upload.', 'info');
+
+}
+
+});
+
+document.getElementById('uploadVideoButton').addEventListener('click',
+function() {
+
+const fileInput = document.getElementById('uploadVideoInput');
+
+if (fileInput.files.length > 0) {
+
+Array.from(fileInput.files).forEach(file => {
+
+uploadFile(file, 'video', 'videoEmotionInput', 'videoProgressBar',
+'videoProgressContainer');
+
+});
+
+fileInput.value = '';
+
+} else {
+
+showToast('Please select a video to upload.', 'info');
+
+}
+
+});
+
+document.getElementById('recordVoiceButton').addEventListener('click',
+async function() {
+
+if (!authService.currentUser) {
+
+showToast(translations[currentLang].login_required, 'error');
+
+return;
+
+}
+
+try {
+
+const stream = await navigator.mediaDevices.getUserMedia({ audio: true
+});
+
+mediaRecorder = new MediaRecorder(stream);
+
+audioChunks = [];
+
+let timerSeconds = 0;
+
+const recordingTimer = document.getElementById('recordingTimer');
+
+mediaRecorder.ondataavailable = (event) => {
+
+audioChunks.push(event.data);
+
+};
+
+mediaRecorder.onstop = async () => {
+
+audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+
+const audioUrl = URL.createObjectURL(audioBlob);
+
+const audioPreview = document.getElementById('audioPreview');
+
+audioPreview.src = audioUrl;
+
+audioPreview.style.display = 'block';
+
+const fileName = `voice_note_${new Date().getTime()}.webm`;
+
+await uploadFile(audioBlob, 'voice', 'voiceEmotionInput',
+'voiceProgressBar', 'voiceProgressContainer');
+
+clearInterval(recordingTimerInterval);
+
+recordingTimer.style.display = 'none';
+
+document.getElementById('recordVoiceButton').style.display = 'block';
+
+document.getElementById('stopRecordingButton').style.display = 'none';
+
+};
+
+mediaRecorder.start();
+
+recordingStartTime = Date.now();
+
+recordingTimer.textContent = '00:00';
+
+recordingTimer.style.display = 'block';
+
+document.getElementById('recordVoiceButton').style.display = 'none';
+
+document.getElementById('stopRecordingButton').style.display = 'block';
+
+recordingTimerInterval = setInterval(() => {
+
+timerSeconds = Math.floor((Date.now() - recordingStartTime) / 1000);
+
+const minutes = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+
+const seconds = String(timerSeconds % 60).padStart(2, '0');
+
+recordingTimer.textContent = `${minutes}:${seconds}`;
+
+}, 1000);
+
+} catch (error) {
+
+showToast(`${translations[currentLang].microphone_error}
+${error.message}`, 'error');
+
+console.error("Microphone access error:", error);
+
+}
+
+});
+
+document.getElementById('stopRecordingButton').addEventListener('click',
+function() {
+
+if (mediaRecorder && mediaRecorder.state === 'recording') {
+
+mediaRecorder.stop();
+
+mediaRecorder.stream.getTracks().forEach(track => track.stop());
+
+}
+
+});
+
+document.querySelectorAll('[data-challenge-id]').forEach(button => {
+
+button.addEventListener('click', async function() {
+
+if (!authService.currentUser) {
+
+showToast(translations[currentLang].login_required, 'error');
+
+return;
+
+}
+
+const challengeId = this.dataset.challengeId;
+
+let responseData = {};
+
+switch (challengeId) {
+
+case 'funny-question':
+
+responseData.answer =
+document.getElementById('funnyQuestionResponse').value;
+
+if (!responseData.answer) {
+
+showToast('Please enter an answer for the funny question challenge.',
+'info');
+
+return;
+
+}
+
+break;
+
+case 'dance-off':
+
+const videoFile =
+document.getElementById('danceOffVideoInput').files[0];
+
+if (!videoFile) {
+
+showToast('Please upload a video for the dance-off challenge.', 'info');
+
+return;
+
+}
+
+await uploadFile(videoFile, 'challenge_video', '', 'videoProgressBar',
+'videoProgressContainer');
+
+responseData.videoUploaded = true;
+
+break;
+
+case 'childhood-memory':
+
+responseData.story =
+document.getElementById('childhoodMemoryResponse').value;
+
+if (!responseData.story) {
+
+showToast('Please enter your story for the childhood memory challenge.',
+'info');
+
+return;
+
+}
+
+break;
+
+}
+
+try {
+
+await
+firestore.collection('users').doc(authService.currentUser.uid).collection('challenges').add({
+
+challengeId: challengeId,
+
+responseData: responseData,
+
+timestamp: firebase.firestore.FieldValue.serverTimestamp()
+
+});
+
+showToast('Challenge response submitted!', 'success');
+
+if (challengeId === 'funny-question')
+document.getElementById('funnyQuestionResponse').value = '';
+
+if (challengeId === 'dance-off')
+document.getElementById('danceOffVideoInput').value = '';
+
+if (challengeId === 'childhood-memory')
+document.getElementById('childhoodMemoryResponse').value = '';
+
+} catch (error) {
+
+showToast(`Challenge submission failed: ${error.message}`, 'error');
+
+console.error('Challenge submission error:', error);
+
+}
+
+});
+
+});
+
+document.getElementById('generateStoryButton').addEventListener('click',
+async function() {
+
+if (!authService.currentUser) {
+
+showToast(translations[currentLang].login_required, 'error');
+
+return;
+
+}
+
+const characters = document.getElementById('storyCharacters').value;
+
+const theme = document.getElementById('storyTheme').value;
+
+if (!characters || !theme) {
+
+showToast('Please enter characters and select a theme.', 'info');
+
+return;
+
+}
+
+showToast('Generating your story...', 'info');
+
+const storyOutput = document.getElementById('storyOutput');
+
+storyOutput.textContent = `Once upon a time, in a land far away,
+${characters} embarked on a grand ${theme} adventure... (This is a
+placeholder story generated by AI.)`;
+
+storyOutput.style.display = 'block';
+
+document.getElementById('storyActions').style.display = 'flex';
+
+showToast('Story generated!', 'success');
+
+});
+
+document.getElementById('saveStoryButton').addEventListener('click',
+async function() {
+
+if (!authService.currentUser) return;
+
+const storyContent = document.getElementById('storyOutput').textContent;
+
+try {
+
+await
+firestore.collection('users').doc(authService.currentUser.uid).collection('stories').add({
+
+content: storyContent,
+
+timestamp: firebase.firestore.FieldValue.serverTimestamp()
+
+});
+
+showToast('Story saved!', 'success');
+
+} catch (error) {
+
+showToast(`Failed to save story: ${error.message}`, 'error');
+
+console.error('Error saving story:', error);
+
+}
+
+});
+
+document.getElementById('shareStoryButton').addEventListener('click',
+function() {
+
+if (!authService.currentUser) return;
+
+const storyContent = document.getElementById('storyOutput').textContent;
+
+navigator.clipboard.writeText(storyContent).then(() => {
+
+showToast('Story copied to clipboard!', 'info');
+
+}).catch(err => {
+
+showToast('Failed to copy story.', 'error');
+
+console.error('Could not copy text: ', err);
+
+});
+
+});
+
+document.getElementById('regenerateStoryButton').addEventListener('click',
+function() {
+
+document.getElementById('generateStoryButton').click();
+
+});
+
+function createPayPalOrder(amount, planName, actions) {
+
+return actions.order.create({
+
+purchase_units: [{
+
+amount: {
+
+currency_code: 'USD',
+
+value: amount
+
+},
+
+description: `${planName} Legacy AI Plan`
+
+}]
+
+});
+
+}
+
+function onPayPalApprove(data, actions) {
+
+return actions.order.capture().then(function(details) {
+
+showToast(`Transaction completed by ${details.payer.name.given_name}!`,
+'success');
+
+console.log('PayPal transaction details:', details);
+
+});
+
+}
+
+function onPayPalError(err) {
+
+showToast(`Payment failed: ${err.message || err}`, 'error');
+
+console.error('PayPal error:', err);
+
+}
+
+function initPayPalButtons(containerId, amount, planName) {
+
+paypal.Buttons({
+
+style: {
+
+layout: 'vertical',
+
+color: 'blue',
+
+shape: 'rect',
+
+label: 'paypal'
+
+},
+
+createOrder: (data, actions) => createPayPalOrder(amount, planName,
+actions),
+
+onApprove: (data, actions) => onPayPalApprove(data, actions),
+
+onError: (err) => onPayPalError(err)
+
+}).render(`#${containerId}`);
+
+}
+
+function initCardFields(containerId, submitButtonId, amount, planName) {
+
+paypal.CardFields({
+
+createOrder: (data, actions) => createPayPalOrder(amount, planName,
+actions),
+
+onApprove: (data, actions) => onPayPalApprove(data, actions),
+
+onError: (err) => onPayPalError(err)
+
+}).render(`#${containerId}`).then(cardFields => {
+
+document.getElementById(submitButtonId).addEventListener('click', () =>
+{
+
+cardFields.submit().catch(err => {
+
+showToast(`Card payment failed: ${err.message || err}`, 'error');
+
+console.error('Card payment error:', err);
+
+});
+
+});
+
+}).catch(err => {
+
+showToast('Failed to initialize card fields.', 'error');
+
+console.error('Card fields initialization error:', err);
+
+});
+
+}
+
+let paymentsClient = null;
+
+function getGooglePaymentsClient() {
+
+if (paymentsClient === null) {
+
+paymentsClient = new google.payments.api.PaymentsClient({
+
+environment: 'TEST'
+
+});
+
+}
+
+return paymentsClient;
+
+}
+
+function onGooglePayLoaded() {
+
+const paymentsClient = getGooglePaymentsClient();
+
+paymentsClient.isReadyToPay({
+
+apiVersion: 2,
+
+apiVersionMinor: 0,
+
+allowedPaymentMethods: [{
+
+type: 'CARD',
+
+parameters: {
+
+allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'],
+
+allowedCardNetworks: ['AMEX', 'DISCOVER', 'MASTERCARD', 'VISA']
+
+},
+
+tokenizationSpecification: {
+
+type: 'PAYMENT_GATEWAY',
+
+parameters: {
+
+gateway: 'paypal',
+
+gatewayMerchantId: 'YOUR_PAYPAL_MERCHANT_ID',
+
+}
+
+}
+
+}]
+
+}).then(function(response) {
+
+if (response.result) {
+
+const buttonEssential = paymentsClient.createButton({
+
+onClick: () => { initiatePayPalFromGooglePay('15.00', 'Essential'); },
+
+buttonColor: 'black',
+
+buttonType: 'buy'
+
+});
+
+document.getElementById('googlepay-button-container-essential').appendChild(buttonEssential);
+
+const buttonFamily = paymentsClient.createButton({
+
+onClick: () => { initiatePayPalFromGooglePay('39.00', 'Family Plus'); },
+
+buttonColor: 'black',
+
+buttonType: 'buy'
+
+});
+
+document.getElementById('googlepay-button-container-family').appendChild(buttonFamily);
+
+} else {
+
+console.warn('Google Pay is not ready to pay.');
+
+}
+
+}).catch(function(err) {
+
+console.error('Google Pay readiness error:', err);
+
+});
+
+}
+
+function initiatePayPalFromGooglePay(amount, planName) {
+
+showToast(`Initiating PayPal payment for ${planName} via Google Pay...`,
+'info');
+
+paypal.Buttons({
+
+createOrder: (data, actions) => createPayPalOrder(amount, planName,
+actions),
+
+onApprove: (data, actions) => onPayPalApprove(data, actions),
+
+onError: (err) => onPayPalError(err)
+
+}).render('body').click();
+
+}
+
+function onApplePayLoaded() {
+
+if (window.ApplePaySession) {
+
+const applePayEssentialButton =
+document.getElementById('applepay-button-essential');
+
+const applePayFamilyButton =
+document.getElementById('applepay-button-family');
+
+if (ApplePaySession.canMakePayments()) {
+
+applePayEssentialButton.style.display = 'block';
+
+applePayFamilyButton.style.display = 'block';
+
+applePayEssentialButton.addEventListener('click', () => {
+
+initiatePayPalFromApplePay('15.00', 'Essential');
+
+});
+
+applePayFamilyButton.addEventListener('click', () => {
+
+initiatePayPalFromApplePay('39.00', 'Family Plus');
+
+});
+
+} else {
+
+console.warn('Apple Pay is not available on this device/browser.');
+
+}
+
+} else {
+
+console.warn('Apple Pay JS API not available.');
+
+}
+
+}
+
+function initiatePayPalFromApplePay(amount, planName) {
+
+showToast(`Initiating PayPal payment for ${planName} via Apple Pay...`,
+'info');
+
+paypal.Buttons({
+
+createOrder: (data, actions) => createPayPalOrder(amount, planName,
+actions),
+
+onApprove: (data, actions) => onPayPalApprove(data, actions),
+
+onError: (err) => onPayPalError(err)
+
+}).render('body').click();
+
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
+initPayPalButtons('paypal-essential', '15.00', 'Essential');
+
+initPayPalButtons('paypal-family', '39.00', 'Family Plus');
+
+initCardFields('card-fields-essential', 'card-submit-essential',
+'15.00', 'Essential');
+
+initCardFields('card-fields-family', 'card-submit-family', '39.00',
+'Family Plus');
+
+document.getElementById('current-year').textContent = new
+Date().getFullYear();
+
+});
+
+</script>
+
+</body>
+
+</html>
