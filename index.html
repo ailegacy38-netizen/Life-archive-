@@ -13,6 +13,7 @@
     <title>Legacy AI - Celebrate Life’s Joyful Moments</title>
     <link rel="icon" href="/favicon.ico" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-NNX53M7SK6"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -26,10 +27,9 @@
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged, GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider, OAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-
         // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAI5Sn4rTmQ_un5baTyfduewlqaAiOibiQ",
@@ -40,11 +40,9 @@
             appId: "1:999843492181:web:0defdcd915cd6dd4273fdc",
             measurementId: "G-NNX53M7SK6"
         };
-
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
-
         // Export services for use in the rest of the script
         window.firebaseServices = {
             app,
@@ -56,7 +54,12 @@
                 createUserWithEmailAndPassword,
                 signOut,
                 sendPasswordResetEmail,
-                onAuthStateChanged
+                onAuthStateChanged,
+                signInWithPopup,
+                GoogleAuthProvider,
+                FacebookAuthProvider,
+                TwitterAuthProvider,
+                OAuthProvider
             },
             dbMethods: {
                 doc, setDoc, getDoc, collection, addDoc, serverTimestamp, updateDoc
@@ -285,6 +288,22 @@
         .card-submit-button:hover {
             background-color: #e63946;
         }
+        /* Social login buttons */
+        .social-btn {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+        .social-btn i {
+            font-size: 1.2em;
+        }
+        .social-btn.google { background-color: #fff; color: #333; border: 1px solid #ddd; }
+        .social-btn.facebook { background-color: #3b5998; color: white; }
+        .social-btn.twitter { background-color: #1da1f2; color: white; }
+        .social-btn.microsoft { background-color: #0078d4; color: white; }
     </style>
 </head>
 <body>
@@ -327,7 +346,7 @@
                 <p class="lead fs-6" data-key="home_lead">Relive the past, celebrate the present, and shape the future with AI-curated happiness. Create Together, Reminisce Forever: Build vibrant digital scrapbooks and happy timelines for generations.</p>
                 <div class="d-grid gap-3 d-md-block">
                     <a href="https://firebasestorage.googleapis.com/v0/b/life-archive-1ed4a.appspot.com/o/downloads%2Fjoyful-guide.pdf?alt=media" class="btn btn-outline-light btn-lg w-100 w-md-auto mt-3" download data-key="download_joyful_guide">Download Joyful Memory Guide</a>
-</div>
+                </div>
             </div>
         </div>
         <div class="py-5 bg-light px-3">
@@ -594,6 +613,23 @@
                     </div>
                     <div id="loginError" class="alert alert-danger mt-3 d-none"></div>
                 </form>
+
+                <!-- Social sign-in options -->
+                <div class="mt-4">
+                    <p class="text-center text-muted mb-3">Or sign in with</p>
+                    <button type="button" class="btn social-btn google w-100" id="googleSignIn">
+                        <i class="fab fa-google"></i> Sign in with Google
+                    </button>
+                    <button type="button" class="btn social-btn facebook w-100" id="facebookSignIn">
+                        <i class="fab fa-facebook-f"></i> Sign in with Facebook
+                    </button>
+                    <button type="button" class="btn social-btn twitter w-100" id="twitterSignIn">
+                        <i class="fab fa-twitter"></i> Sign in with Twitter
+                    </button>
+                    <button type="button" class="btn social-btn microsoft w-100" id="microsoftSignIn">
+                        <i class="fab fa-microsoft"></i> Sign in with Microsoft
+                    </button>
+                </div>
             </div>
             <div class="client-portal-section" id="signup-form" style="display: none;">
                 <h2 class="text-center mb-4 fs-3" data-key="signup_title">Sign Up for Joyful Portal</h2>
@@ -696,18 +732,21 @@
             createUserWithEmailAndPassword,
             signOut,
             sendPasswordResetEmail,
-            onAuthStateChanged
+            onAuthStateChanged,
+            signInWithPopup,
+            GoogleAuthProvider,
+            FacebookAuthProvider,
+            TwitterAuthProvider,
+            OAuthProvider
         } = authMethods;
         const { doc, setDoc, getDoc, collection, addDoc, serverTimestamp, updateDoc } = dbMethods;
         const { ref: storageRef, uploadBytes, getDownloadURL } = storageMethods;
-
         let currentLang = 'en';
         let mediaRecorder;
         let audioChunks = [];
         let audioBlob;
         let recordingStartTime;
         let recordingTimerInterval;
-
         function showToast(message, type = 'info') {
             const toastContainer = document.querySelector('.toast-container');
             const toast = document.createElement('div');
@@ -718,7 +757,6 @@
                 toast.remove();
             }, 3000);
         }
-
         const translations = {
             en: {
                 home_title: "Capture Life’s Joyful Moments with Legacy AI",
@@ -837,7 +875,6 @@
                 // Portuguese translations if needed
             }
         };
-
         function applyTranslations() {
             document.querySelectorAll('[data-key]').forEach(el => {
                 const key = el.getAttribute('data-key');
@@ -855,7 +892,6 @@
                 document.querySelector('[data-key="welcome_user"]').innerHTML = translations[currentLang].welcome_user.replace('!', '<span id="userName"></span>!');
             }
         }
-
         document.querySelectorAll('.dropdown-item[data-lang]').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -863,9 +899,7 @@
                 applyTranslations();
             });
         });
-
         applyTranslations();
-
         document.querySelectorAll('a[data-page]').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -874,7 +908,6 @@
                 });
                 const targetPage = this.getAttribute('data-page');
                 document.getElementById(targetPage).classList.add('active');
-
                 if (targetPage === 'client-portal') {
                     onAuthStateChanged(auth, (user) => {
                         if (user) {
@@ -892,19 +925,16 @@
                 }
             });
         });
-
         document.getElementById('showSignup').addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('signup-form').style.display = 'block';
         });
-
         document.getElementById('showLogin').addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('signup-form').style.display = 'none';
             document.getElementById('login-form').style.display = 'block';
         });
-
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('clientEmail').value;
@@ -921,7 +951,6 @@
                 console.error('Login error:', error);
             }
         });
-
         document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('signupEmail').value;
@@ -939,7 +968,6 @@
                 console.error('Signup error:', error);
             }
         });
-
         document.getElementById('logoutButton').addEventListener('click', async function(e) {
             e.preventDefault();
             try {
@@ -952,7 +980,6 @@
                 console.error('Logout error:', error);
             }
         });
-
         document.querySelector('[data-key="forgot_password"]').addEventListener('click', async function(e) {
             e.preventDefault();
             const email = document.getElementById('clientEmail').value;
@@ -968,7 +995,6 @@
                 showToast(translations[currentLang].email_required, 'error');
             }
         });
-
         async function updatePlanStatus(userId) {
             const planStatusElement = document.getElementById('plan-status');
             try {
@@ -985,18 +1011,15 @@
                 planStatusElement.style.display = 'none';
             }
         }
-
         async function uploadFile(file, type, emotionTagsInputId, progressBarId, progressContainerId) {
             if (!auth.currentUser) {
                 showToast(translations[currentLang].login_required, 'error');
                 return;
             }
-
             const fileRef = storageRef(storage, `${type}s/${auth.currentUser.uid}/${file.name}`);
             const progressBar = document.getElementById(progressBarId);
             const progressContainer = document.getElementById(progressContainerId);
             progressContainer.style.display = 'block';
-
             try {
                 const snapshot = await uploadBytes(fileRef, file);
                 const downloadURL = await getDownloadURL(snapshot.ref);
@@ -1017,7 +1040,6 @@
                 progressContainer.style.display = 'none';
             }
         }
-
         document.getElementById('uploadPhotoButton').addEventListener('click', function() {
             const fileInput = document.getElementById('uploadPhotoInput');
             if (fileInput.files.length > 0) {
@@ -1029,7 +1051,6 @@
                 showToast('Please select a photo to upload.', 'info');
             }
         });
-
         document.getElementById('uploadVideoButton').addEventListener('click', function() {
             const fileInput = document.getElementById('uploadVideoInput');
             if (fileInput.files.length > 0) {
@@ -1041,77 +1062,64 @@
                 showToast('Please select a video to upload.', 'info');
             }
         });
-
         document.getElementById('recordVoiceButton').addEventListener('click', async function() {
             if (!auth.currentUser) {
                 showToast(translations[currentLang].login_required, 'error');
                 return;
             }
-
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
                 audioChunks = [];
                 let timerSeconds = 0;
                 const recordingTimer = document.getElementById('recordingTimer');
-
                 mediaRecorder.ondataavailable = (event) => {
                     audioChunks.push(event.data);
                 };
-
                 mediaRecorder.onstop = async () => {
                     audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                     const audioUrl = URL.createObjectURL(audioBlob);
                     const audioPreview = document.getElementById('audioPreview');
                     audioPreview.src = audioUrl;
                     audioPreview.style.display = 'block';
-
                     const fileName = `voice_note_${new Date().getTime()}.webm`;
                     await uploadFile(audioBlob, 'voice', 'voiceEmotionInput', 'voiceProgressBar', 'voiceProgressContainer');
-
                     clearInterval(recordingTimerInterval);
                     recordingTimer.style.display = 'none';
                     document.getElementById('recordVoiceButton').style.display = 'block';
                     document.getElementById('stopRecordingButton').style.display = 'none';
                 };
-
                 mediaRecorder.start();
                 recordingStartTime = Date.now();
                 recordingTimer.textContent = '00:00';
                 recordingTimer.style.display = 'block';
                 document.getElementById('recordVoiceButton').style.display = 'none';
                 document.getElementById('stopRecordingButton').style.display = 'block';
-
                 recordingTimerInterval = setInterval(() => {
                     timerSeconds = Math.floor((Date.now() - recordingStartTime) / 1000);
                     const minutes = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
                     const seconds = String(timerSeconds % 60).padStart(2, '0');
                     recordingTimer.textContent = `${minutes}:${seconds}`;
                 }, 1000);
-
             } catch (error) {
                 showToast(`${translations[currentLang].microphone_error} ${error.message}`, 'error');
                 console.error("Microphone access error:", error);
             }
         });
-
         document.getElementById('stopRecordingButton').addEventListener('click', function() {
             if (mediaRecorder && mediaRecorder.state === 'recording') {
                 mediaRecorder.stop();
                 mediaRecorder.stream.getTracks().forEach(track => track.stop());
             }
         });
-
         document.querySelectorAll('[data-challenge-id]').forEach(button => {
             button.addEventListener('click', async function() {
                 if (!auth.currentUser) {
                     showToast(translations[currentLang].login_required, 'error');
                     return;
                 }
-
                 const challengeId = this.dataset.challengeId;
                 let responseData = {};
-
                 switch (challengeId) {
                     case 'funny-question':
                         responseData.answer = document.getElementById('funnyQuestionResponse').value;
@@ -1137,7 +1145,6 @@
                         }
                         break;
                 }
-
                 try {
                     await addDoc(collection(db, 'users', auth.currentUser.uid, 'challenges'), {
                         challengeId: challengeId,
@@ -1154,7 +1161,6 @@
                 }
             });
         });
-
         document.getElementById('addMilestoneButton').addEventListener('click', async function() {
             if (!auth.currentUser) {
                 showToast(translations[currentLang].login_required, 'error');
@@ -1173,7 +1179,6 @@
                 }
             }
         });
-
         document.getElementById('addGoalButton').addEventListener('click', async function() {
             if (!auth.currentUser) {
                 showToast(translations[currentLang].login_required, 'error');
@@ -1196,7 +1201,6 @@
                 showToast('Please enter a goal.', 'info');
             }
         });
-
         document.getElementById('generateStoryButton').addEventListener('click', async function() {
             if (!auth.currentUser) {
                 showToast(translations[currentLang].login_required, 'error');
@@ -1208,7 +1212,6 @@
                 showToast('Please enter characters and select a theme.', 'info');
                 return;
             }
-
             showToast('Generating your story...', 'info');
             const storyOutput = document.getElementById('storyOutput');
             storyOutput.textContent = `Once upon a time, in a land far away, ${characters} embarked on a grand ${theme} adventure... (This is a placeholder story generated by AI.)`;
@@ -1216,7 +1219,6 @@
             document.getElementById('storyActions').style.display = 'flex';
             showToast('Story generated!', 'success');
         });
-
         document.getElementById('saveStoryButton').addEventListener('click', async function() {
             if (!auth.currentUser) return;
             const storyContent = document.getElementById('storyOutput').textContent;
@@ -1231,7 +1233,6 @@
                 console.error('Error saving story:', error);
             }
         });
-
         document.getElementById('shareStoryButton').addEventListener('click', function() {
             if (!auth.currentUser) return;
             const storyContent = document.getElementById('storyOutput').textContent;
@@ -1242,11 +1243,9 @@
                 console.error('Could not copy text: ', err);
             });
         });
-
         document.getElementById('regenerateStoryButton').addEventListener('click', function() {
             document.getElementById('generateStoryButton').click();
         });
-
         async function createPayPalOrder(amount, planName) {
             const response = await fetch('https://us-central1-life-archive-1ed4a.cloudfunctions.net/createOrder', {
                 method: 'POST',
@@ -1264,7 +1263,6 @@
             const data = await response.json();
             return data.id;
         }
-
         async function onPayPalApprove(data) {
             const response = await fetch('https://us-central1-life-archive-1ed4a.cloudfunctions.net/captureOrder', {
                 method: 'POST',
@@ -1287,12 +1285,10 @@
             }
             return details;
         }
-
         function onPayPalError(err) {
             showToast(`Payment failed: ${err.message || err}`, 'error');
             console.error('PayPal error:', err);
         }
-
         function initPayPalButtons(containerId, amount, planName) {
             paypal.Buttons({
                 style: {
@@ -1306,7 +1302,6 @@
                 onError: onPayPalError
             }).render(`#${containerId}`);
         }
-
         function initCardFields(containerId, submitButtonId, amount, planName) {
             const cardFields = paypal.CardFields({
                 createOrder: () => createPayPalOrder(amount, planName),
@@ -1324,6 +1319,43 @@
                 document.getElementById(containerId).style.display = 'none';
             }
         }
+        // Social sign-in handlers
+        async function handleSocialSignIn(provider) {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                showToast('Logged in successfully!', 'success');
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('signup-form').style.display = 'none';
+                document.getElementById('dashboard-content').style.display = 'block';
+                document.getElementById('userName').textContent = result.user.email || result.user.displayName || 'User';
+                // Ensure new social users get the basic plan
+                await setDoc(doc(db, 'users', result.user.uid), { plan: 'basic' }, { merge: true });
+                updatePlanStatus(result.user.uid);
+            } catch (error) {
+                showToast(`Login failed: ${error.message}`, 'error');
+                console.error('Social login error:', error);
+            }
+        }
+
+        document.getElementById('googleSignIn')?.addEventListener('click', () => {
+            const provider = new GoogleAuthProvider();
+            handleSocialSignIn(provider);
+        });
+
+        document.getElementById('facebookSignIn')?.addEventListener('click', () => {
+            const provider = new FacebookAuthProvider();
+            handleSocialSignIn(provider);
+        });
+
+        document.getElementById('twitterSignIn')?.addEventListener('click', () => {
+            const provider = new TwitterAuthProvider();
+            handleSocialSignIn(provider);
+        });
+
+        document.getElementById('microsoftSignIn')?.addEventListener('click', () => {
+            const provider = new OAuthProvider('microsoft.com');
+            handleSocialSignIn(provider);
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             initPayPalButtons('paypal-essential', '15.00', 'Essential');
